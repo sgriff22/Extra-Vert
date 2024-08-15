@@ -82,7 +82,8 @@ Choose an option:
             break;
         case "c":
             Console.Clear();
-            throw new NotImplementedException("Adopt a plant");
+            AdoptPlant();
+            break;
         case "d":
             Console.Clear();
             throw new NotImplementedException("Delist a plant");
@@ -215,6 +216,75 @@ POST A PLANT");
     City: {city}
     ZIP: {zip}
     Sold: false");
+    Console.WriteLine("Press any key to go back to Menu");
+    Console.ReadKey();
+    Console.Clear();
+}
+
+void AdoptPlant()
+{
+    Console.Clear();
+    Console.WriteLine(@"🌿 ExtraVert 🌱 
+ADOPT A PLANT");
+
+    //Display all available plants
+    List<Plant> availablePlants = plants.FindAll(p => !p.Sold);
+
+    //if no available plants add a message
+    if (availablePlants.Count == 0)
+    {
+        Console.WriteLine("No plants are currently available for adoption.");
+        Console.WriteLine("Press any key to go back to Menu");
+        Console.ReadKey();
+        Console.Clear();
+        return;
+    }
+
+    for (int i = 0; i < availablePlants.Count; i++)
+    {
+        Console.WriteLine($"{i + 1}. {availablePlants[i].Species} is available in {availablePlants[i].City} for {availablePlants[i].AskingPrice} dollars");
+    }
+
+    //Get user response
+    int choice = 0;
+    bool validInput = false;
+
+    while (!validInput)
+    {
+        Console.WriteLine("Enter the number of the plant you want to adopt (or 0 to cancel): ");
+        try 
+        {
+            choice = int.Parse(Console.ReadLine().Trim());
+
+            if (choice == 0)
+            {
+                Console.Clear();
+                Console.WriteLine("Adoption process cancelled.");
+                Console.WriteLine("Press any key to go back to Menu");
+                Console.ReadKey();
+                Console.Clear();
+                return;
+            }
+            else if (choice >= 1 && choice <= availablePlants.Count)
+            {
+                validInput = true;
+            }
+            else
+            {
+                Console.WriteLine("Please enter a valid number corresponding to the plant.");
+            }
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine("Please type only integers!");
+        }
+    }
+    
+    Plant selectedPlant = availablePlants[choice -1];
+    selectedPlant.Sold = true;
+
+    Console.WriteLine($"You have successfully adopted the plant: {selectedPlant.Species}");
+
     Console.WriteLine("Press any key to go back to Menu");
     Console.ReadKey();
     Console.Clear();
