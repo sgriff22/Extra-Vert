@@ -7,7 +7,8 @@
         AskingPrice = 25.50M,
         City = "Nashville",
         ZIP = 37167,
-        Sold = false
+        Sold = false,
+        AvailableUntil = new DateTime(2024, 9, 20)
     },
     new Plant()
     {
@@ -16,7 +17,8 @@
         AskingPrice = 30.75M,
         City = "Austin",
         ZIP = 73301,
-        Sold = false
+        Sold = false,
+        AvailableUntil = new DateTime(2024, 8, 20)
     },
     new Plant()
     {
@@ -25,7 +27,8 @@
         AskingPrice = 20.50M,
         City = "Dallas",
         ZIP = 75201,
-        Sold = false
+        Sold = false,
+        AvailableUntil = new DateTime(2024, 3, 20)
     },
     new Plant()
     {
@@ -34,7 +37,8 @@
         AskingPrice = 35.75M,
         City = "Nashville",
         ZIP = 37167,
-        Sold = false
+        Sold = false,
+        AvailableUntil = new DateTime(2024, 7, 20)
     },
     new Plant()
     {
@@ -43,7 +47,8 @@
         AskingPrice = 15.00M,
         City = "San Antonio",
         ZIP = 78201,
-        Sold = true
+        Sold = true,
+        AvailableUntil = new DateTime(2024, 9, 17)
     }
 };
 
@@ -162,7 +167,7 @@ POST A PLANT");
     int light = 0;
     bool validInput = false; 
     Console.WriteLine(@"How much light does the plant need?
-    1 (Shade) - 5 (Full Sun)");
+1 (Shade) - 5 (Full Sun)");
     
     while (!validInput)
         {
@@ -229,6 +234,39 @@ POST A PLANT");
         }
     }
 
+    //AVAILABLE UNTIL
+    int year = 0;
+    int month = 0;
+    int day = 0;
+    DateTime date = DateTime.MinValue;
+    bool validDateInput = false;
+    while (!validDateInput)
+    {
+        Console.WriteLine("Enter the plants expiration date: ");
+        try
+        {
+            Console.WriteLine("Year:");
+            year = int.Parse(Console.ReadLine().Trim());
+            Console.WriteLine("Month:");
+            month = int.Parse(Console.ReadLine().Trim());
+            Console.WriteLine("Day:");
+            day = int.Parse(Console.ReadLine().Trim());
+            // Try to create a DateTime object to validate the date
+            date = new DateTime(year, month, day);
+            validDateInput = true;
+        }
+         catch (FormatException)
+        {
+            Console.WriteLine("❗Please enter valid integers for year, month, and day.");
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            Console.WriteLine(@"❗The date you entered is out of range.
+❗Months should be between 1 and 12.
+❗Days should be between 1 and 31, depending on the month and leap year status.");
+        }
+    }
+
     //Create new plant
     Plant newPlant = new Plant
     {
@@ -237,7 +275,8 @@ POST A PLANT");
         AskingPrice = price,
         City = city,
         ZIP = zip,
-        Sold = false
+        Sold = false,
+        AvailableUntil = date
     };
 
     plants.Add(newPlant);
@@ -249,7 +288,8 @@ POST A PLANT");
     Asking Price: {price}
     City: {city}
     ZIP: {zip}
-    Sold: false");
+    Sold: false
+    Available Until: {date:MM/dd/yyyy}");
     Console.WriteLine("Press any key to go back to Menu");
     Console.ReadKey();
     Console.Clear();
@@ -261,8 +301,11 @@ void AdoptPlant()
     Console.WriteLine(@$"{logo}
 ADOPT A PLANT");
 
+    // Get the current date and time
+    DateTime now = DateTime.Now;
+
     //Display all available plants
-    List<Plant> availablePlants = plants.FindAll(p => !p.Sold);
+    List<Plant> availablePlants = plants.FindAll(p => !p.Sold && p.AvailableUntil >= now);
 
     bool validInput = false;
 
@@ -278,7 +321,9 @@ ADOPT A PLANT");
 
     for (int i = 0; i < availablePlants.Count; i++)
     {
-        Console.WriteLine($"{i + 1}. {availablePlants[i].Species} is available in {availablePlants[i].City} for {availablePlants[i].AskingPrice} dollars");
+        DateTime newDate = availablePlants[i].AvailableUntil;
+        Console.WriteLine(@$"{i + 1}. {availablePlants[i].Species} is available in {availablePlants[i].City} for {availablePlants[i].AskingPrice} dollars. 
+   Listing Expires: {newDate:MM/dd/yyyy}");
     }
 
     //Get user response
