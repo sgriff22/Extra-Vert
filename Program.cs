@@ -47,6 +47,19 @@
     }
 };
 
+//PLANT OF THE DAY
+// Create a Random object
+Random random = new Random();
+// Select a random available plant
+Plant randomPlant = null;
+while (randomPlant == null || randomPlant.Sold)
+{
+// Generate a random index for the plants list
+int randomIndex = random.Next(plants.Count);
+// Select a random plant
+randomPlant = plants[randomIndex];
+}
+
 Console.Clear();
 
 string greeting = @"🌿 Welcome to ExtraVert! 🌱
@@ -60,7 +73,7 @@ Console.ReadKey();
 Console.Clear();
 
 string choice = null;
-while (choice != "e") 
+while (choice != "f") 
 {
     Console.WriteLine(@$"{logo}
 Choose an option:
@@ -68,7 +81,8 @@ Choose an option:
     b. Post a plant to be adopted
     c. Adopt a plant
     d. Delist a plant
-    e. Exit");
+    e. Plant of the Day
+    f. Exit");
 
     choice = Console.ReadLine();
 
@@ -91,6 +105,18 @@ Choose an option:
             RemovePlant();
             break;
         case "e":
+            Console.Clear();
+            Console.WriteLine(@$"🌿 Plant of the Day 📅
+Species: {randomPlant.Species}
+Location: {randomPlant.City}, ZIP: {randomPlant.ZIP}
+Light Needs: {randomPlant.LightNeeds}
+Asking Price: {randomPlant.AskingPrice:C}");
+            Console.WriteLine();
+            Console.WriteLine("Press any key to go back to Menu");
+            Console.ReadKey(); 
+            Console.Clear();
+            break;
+        case "f":
             Console.Clear();
             Console.WriteLine("Goodbye!");
             break;
