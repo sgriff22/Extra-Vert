@@ -39,7 +39,7 @@
     new Plant()
     {
         Species = "Aloe Vera",
-        LightNeeds = 1,
+        LightNeeds = 5,
         AskingPrice = 15.00M,
         City = "San Antonio",
         ZIP = 78201,
@@ -73,7 +73,7 @@ Console.ReadKey();
 Console.Clear();
 
 string choice = null;
-while (choice != "f") 
+while (choice != "g") 
 {
     Console.WriteLine(@$"{logo}
 Choose an option:
@@ -82,7 +82,8 @@ Choose an option:
     c. Adopt a plant
     d. Delist a plant
     e. Plant of the Day
-    f. Exit");
+    f. Search plants by light needs
+    g. EXIT");
 
     choice = Console.ReadLine();
 
@@ -117,6 +118,10 @@ Asking Price: {randomPlant.AskingPrice:C}");
             Console.Clear();
             break;
         case "f":
+            Console.Clear();
+            SearchPlants();
+            break;
+        case "g":
             Console.Clear();
             Console.WriteLine("Goodbye!");
             break;
@@ -389,6 +394,70 @@ Press any key to return to the menu.");
             Console.WriteLine("❗Please enter a valid integer.");
         }
     }
-
-    
 } 
+
+void SearchPlants()
+{
+    Console.Clear();
+    Console.WriteLine(@$"{logo}
+PLANT SEARCH");
+    Console.WriteLine(@"Enter your maximum light needs number
+1 (Shade) - 5 (Full Sun)");
+    int response = 0;
+
+    bool validInput = false;
+
+    while (!validInput)
+    {
+        try 
+        {
+            response = int.Parse(Console.ReadLine().Trim());
+
+            if (response >= 1 && response <= 5)
+            {
+                validInput = true;
+            }
+            else
+            {
+                Console.WriteLine("❗Please enter a number between 1 and 5.");
+            }
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine("❗Please enter a valid integer.");
+        }
+    }
+
+    //Create a new list to store the plants based off response
+    List<Plant> plantsFound = new List<Plant>();
+
+    //Filter through and store only the plants that fit response value
+    foreach (Plant plant in plants)
+    {
+        if(plant.LightNeeds <= response) 
+        {
+            plantsFound.Add(plant);
+        }
+    }
+
+    //Display the filtered plants 
+    if (plantsFound.Count == 0) 
+    {
+        Console.WriteLine("😞 No plants match your light needs criteria.");
+    }
+    else
+    {
+        Console.WriteLine($"Plants with light needs up to {response}:");
+        int index = 1;
+        foreach (Plant plant in plantsFound)
+        {
+            Console.WriteLine($"{index}. Light Needs: {plant.LightNeeds} - {plant.Species} in {plant.City} {(plant.Sold ? "was sold" : "is available")} for {plant.AskingPrice} dollars.");
+            index++;
+        }
+    }
+
+    Console.WriteLine();
+    Console.WriteLine("Press any key to go back to Menu");
+    Console.ReadKey();
+    Console.Clear();
+}
