@@ -53,6 +53,8 @@ string greeting = @"🌿 Welcome to ExtraVert! 🌱
 Explore, list, and buy secondhand plants with ease.";
 Console.WriteLine(greeting);
 
+string logo = "🌿 ExtraVert 🌱";
+
 Console.WriteLine("Press any key to enter");
 Console.ReadKey(); 
 Console.Clear();
@@ -60,7 +62,7 @@ Console.Clear();
 string choice = null;
 while (choice != "e") 
 {
-    Console.WriteLine(@"🌿 ExtraVert 🌱
+    Console.WriteLine(@$"{logo}
 Choose an option:
     a. Display all plants
     b. Post a plant to be adopted
@@ -86,14 +88,15 @@ Choose an option:
             break;
         case "d":
             Console.Clear();
-            throw new NotImplementedException("Delist a plant");
+            RemovePlant();
+            break;
         case "e":
             Console.Clear();
             Console.WriteLine("Goodbye!");
             break;
         default:
             Console.Clear();
-            Console.WriteLine("Invalid choice, please choose from the options shown.");
+            Console.WriteLine("❗Invalid choice, please choose from the options shown.");
             break;
     }
 
@@ -101,7 +104,7 @@ Choose an option:
 
 void ListPlants()
 {
-    Console.WriteLine(@"🌿 ExtraVert 🌱 
+    Console.WriteLine(@$"{logo}
 ALL PLANTS");
     for (int i = 0; i < plants.Count; i++)
     {
@@ -117,7 +120,7 @@ ALL PLANTS");
 void CreatePlant()
 {
     Console.Clear();
-    Console.WriteLine(@"🌿 ExtraVert 🌱 
+    Console.WriteLine(@$"{logo}
 POST A PLANT");
 
     //SPECIES
@@ -142,17 +145,17 @@ POST A PLANT");
                 }
                 else
                 {
-                    Console.WriteLine("Please enter a number between 1 and 5.");
+                    Console.WriteLine("❗Please enter a number between 1 and 5.");
                 }
             }
             catch (FormatException)
             {
-                Console.WriteLine("Please type only integers!");
+                Console.WriteLine("❗Please type only integers!");
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                Console.WriteLine("Do Better!");
+                Console.WriteLine("❗Do Better!");
             }
         }
 
@@ -170,7 +173,7 @@ POST A PLANT");
         }
         catch (FormatException)
         {
-            Console.WriteLine("Please enter a valid decimal number.");
+            Console.WriteLine("❗Please enter a valid decimal number.");
         }
     }
 
@@ -191,7 +194,7 @@ POST A PLANT");
         }
         catch (FormatException)
         {
-            Console.WriteLine("Please enter a valid integer for zip code.");
+            Console.WriteLine("❗Please enter a valid integer for zip code.");
         }
     }
 
@@ -209,7 +212,7 @@ POST A PLANT");
     plants.Add(newPlant);
 
     Console.Clear();
-    Console.WriteLine(@$"Plant added successfully!
+    Console.WriteLine(@$"🌟 Plant added successfully! 🌟 
     Species: {species}
     Light Needed: {light}
     Asking Price: {price}
@@ -224,20 +227,22 @@ POST A PLANT");
 void AdoptPlant()
 {
     Console.Clear();
-    Console.WriteLine(@"🌿 ExtraVert 🌱 
+    Console.WriteLine(@$"{logo}
 ADOPT A PLANT");
 
     //Display all available plants
     List<Plant> availablePlants = plants.FindAll(p => !p.Sold);
 
+    bool validInput = false;
+
     //if no available plants add a message
     if (availablePlants.Count == 0)
     {
-        Console.WriteLine("No plants are currently available for adoption.");
+        Console.WriteLine("😞 No plants are currently available for adoption.");
         Console.WriteLine("Press any key to go back to Menu");
         Console.ReadKey();
         Console.Clear();
-        return;
+        validInput = true;
     }
 
     for (int i = 0; i < availablePlants.Count; i++)
@@ -247,23 +252,23 @@ ADOPT A PLANT");
 
     //Get user response
     int choice = 0;
-    bool validInput = false;
+        
+    Console.WriteLine("Enter the number of the plant you want to adopt (or 0 to cancel): ");
 
     while (!validInput)
     {
-        Console.WriteLine("Enter the number of the plant you want to adopt (or 0 to cancel): ");
         try 
         {
             choice = int.Parse(Console.ReadLine().Trim());
 
             if (choice == 0)
             {
+                validInput = true;
                 Console.Clear();
-                Console.WriteLine("Adoption process cancelled.");
+                Console.WriteLine("❌ Adoption process cancelled.");
                 Console.WriteLine("Press any key to go back to Menu");
                 Console.ReadKey();
                 Console.Clear();
-                return;
             }
             else if (choice >= 1 && choice <= availablePlants.Count)
             {
@@ -271,21 +276,93 @@ ADOPT A PLANT");
             }
             else
             {
-                Console.WriteLine("Please enter a valid number corresponding to the plant.");
+                Console.WriteLine("❗Please enter a valid number corresponding to the plant.");
             }
         }
         catch (FormatException)
         {
-            Console.WriteLine("Please type only integers!");
+            Console.WriteLine("❗Please type only integers!");
         }
     }
-    
-    Plant selectedPlant = availablePlants[choice -1];
-    selectedPlant.Sold = true;
 
-    Console.WriteLine($"You have successfully adopted the plant: {selectedPlant.Species}");
+    if (choice != 0)
+    {
+        Plant selectedPlant = availablePlants[choice -1];
+        selectedPlant.Sold = true;
 
-    Console.WriteLine("Press any key to go back to Menu");
-    Console.ReadKey();
-    Console.Clear();
+        Console.Clear();
+        Console.WriteLine(@$"🎉 Congratulations on adopting your new plant! 🎉
+You have successfully adopted:
+    - Species: {selectedPlant.Species}
+    - City: {selectedPlant.City}
+    - Asking Price: {selectedPlant.AskingPrice:C}
+Thank you for adopting from ExtraVert!");
+
+        Console.WriteLine("Press any key to go back to Menu");
+        Console.ReadKey();
+        Console.Clear();
+    }
 }
+
+void RemovePlant()
+{
+    Console.WriteLine(@$"{logo}
+REMOVE PLANT");
+
+    for (int i = 0; i < plants.Count; i++)
+    {
+        Console.WriteLine($"{i + 1}. {plants[i].Species} in {plants[i].City} {(plants[i].Sold ? "was sold" : "is available")} for {plants[i].AskingPrice} dollars");
+    }
+
+    Console.WriteLine("Enter the number of the plant you want to remove (or 0 to cancel): ");
+    bool validInput = false;
+
+    while(!validInput) 
+    {
+
+        try
+        {
+            int choice = int.Parse(Console.ReadLine().Trim());
+
+            if (choice == 0)
+            {
+                validInput = true;
+                Console.Clear();
+                Console.WriteLine("❌ Operation cancelled.");
+                Console.WriteLine("Press any key to return to the menu.");
+                Console.ReadKey();
+                Console.Clear();
+            }
+            else if (choice >= 1 && choice <= plants.Count)
+            {
+                // Capture the plant information before removing it
+                Plant removedPlant = plants[choice - 1];
+
+                // Remove the plant from the list (adjusting for zero-based index)
+                plants.RemoveAt(choice - 1);
+                validInput = true;
+
+                Console.Clear();
+                Console.WriteLine(@$"🌟 Plant Successfully Removed! 🌟");
+                Console.WriteLine(@$"You have successfully removed the following plant:
+    - Species: {removedPlant.Species}
+    - City: {removedPlant.City}
+    - Asking Price: {removedPlant.AskingPrice:C}
+Thank you for updating our plant inventory!
+Press any key to return to the menu.");
+                Console.ReadKey();
+                Console.Clear();
+            }
+            else
+            {
+                Console.WriteLine("❗Please enter a valid number corresponding to the plant.");
+            }
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine("❗Please enter a valid integer.");
+        }
+    }
+
+    
+} 
