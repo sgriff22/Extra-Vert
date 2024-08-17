@@ -73,12 +73,12 @@ Console.WriteLine(greeting);
 
 string logo = "🌿 ExtraVert 🌱";
 
-Console.WriteLine("Press any key to enter");
+Console.WriteLine("\nPress any key to enter");
 Console.ReadKey(); 
 Console.Clear();
 
 string choice = null;
-while (choice != "g") 
+while (choice != "h") 
 {
     Console.WriteLine(@$"{logo}
 Choose an option:
@@ -88,7 +88,8 @@ Choose an option:
     d. Delist a plant
     e. Plant of the Day
     f. Search plants by light needs
-    g. EXIT");
+    g. View plant stats
+    h. EXIT");
 
     choice = Console.ReadLine();
 
@@ -117,8 +118,8 @@ Species: {randomPlant.Species}
 Location: {randomPlant.City}, ZIP: {randomPlant.ZIP}
 Light Needs: {randomPlant.LightNeeds}
 Asking Price: {randomPlant.AskingPrice:C}");
-            Console.WriteLine();
-            Console.WriteLine("Press any key to go back to Menu");
+         
+            Console.WriteLine("\nPress any key to go back to Menu");
             Console.ReadKey(); 
             Console.Clear();
             break;
@@ -128,7 +129,11 @@ Asking Price: {randomPlant.AskingPrice:C}");
             break;
         case "g":
             Console.Clear();
-            Console.WriteLine("Goodbye!");
+            PlantStats();
+            break;
+        case "h":
+            Console.Clear();
+            Console.WriteLine("👋 Goodbye!");
             break;
         default:
             Console.Clear();
@@ -146,9 +151,8 @@ ALL PLANTS");
     {
         Console.WriteLine($"{i + 1}. {plants[i].Species} in {plants[i].City} {(plants[i].Sold ? "was sold" : "is available")} for {plants[i].AskingPrice} dollars");
     }
-    // Add space between the list and the menu
-    Console.WriteLine();
-    Console.WriteLine("Press any key to go back to Menu");
+  
+    Console.WriteLine("\nPress any key to go back to Menu");
     Console.ReadKey(); 
     Console.Clear();
 }
@@ -290,7 +294,7 @@ POST A PLANT");
     ZIP: {zip}
     Sold: false
     Available Until: {date:MM/dd/yyyy}");
-    Console.WriteLine("Press any key to go back to Menu");
+    Console.WriteLine("\nPress any key to go back to Menu");
     Console.ReadKey();
     Console.Clear();
 }
@@ -313,7 +317,7 @@ ADOPT A PLANT");
     if (availablePlants.Count == 0)
     {
         Console.WriteLine("😞 No plants are currently available for adoption.");
-        Console.WriteLine("Press any key to go back to Menu");
+        Console.WriteLine("\nPress any key to go back to Menu");
         Console.ReadKey();
         Console.Clear();
         validInput = true;
@@ -342,7 +346,7 @@ ADOPT A PLANT");
                 validInput = true;
                 Console.Clear();
                 Console.WriteLine("❌ Adoption process cancelled.");
-                Console.WriteLine("Press any key to go back to Menu");
+                Console.WriteLine("\nPress any key to go back to Menu");
                 Console.ReadKey();
                 Console.Clear();
             }
@@ -374,7 +378,7 @@ You have successfully adopted:
     - Asking Price: {selectedPlant.AskingPrice:C}
 Thank you for adopting from ExtraVert!");
 
-        Console.WriteLine("Press any key to go back to Menu");
+        Console.WriteLine("\nPress any key to go back to Menu");
         Console.ReadKey();
         Console.Clear();
     }
@@ -405,7 +409,7 @@ REMOVE PLANT");
                 validInput = true;
                 Console.Clear();
                 Console.WriteLine("❌ Operation cancelled.");
-                Console.WriteLine("Press any key to return to the menu.");
+                Console.WriteLine("\nPress any key to return to the menu.");
                 Console.ReadKey();
                 Console.Clear();
             }
@@ -425,6 +429,7 @@ REMOVE PLANT");
     - City: {removedPlant.City}
     - Asking Price: {removedPlant.AskingPrice:C}
 Thank you for updating our plant inventory!
+
 Press any key to return to the menu.");
                 Console.ReadKey();
                 Console.Clear();
@@ -501,8 +506,83 @@ PLANT SEARCH");
         }
     }
 
-    Console.WriteLine();
-    Console.WriteLine("Press any key to go back to Menu");
+    Console.WriteLine("\nPress any key to go back to Menu");
+    Console.ReadKey();
+    Console.Clear();
+}
+
+void PlantStats()
+{
+    Console.WriteLine(@$"{logo}
+PLANT STATS");
+
+    //Lowest Price
+    Plant lowestPricedPlant = null;
+    decimal lowestPrice = decimal.MaxValue;
+
+    for (int i = 0; i < plants.Count; i++)
+    {
+        if (plants[i].AskingPrice < lowestPrice)
+        {
+            lowestPrice = plants[i].AskingPrice;
+            lowestPricedPlant = plants[i];
+        }
+    }
+    Console.WriteLine($"💲 Lowest priced: {lowestPricedPlant.Species}");
+
+    //Highest Price
+    Plant highestPricedPlant = null;
+    decimal highestPrice = decimal.MinValue;
+
+    for (int i = 0; i < plants.Count; i++)
+    {
+        if (plants[i].AskingPrice > highestPrice)
+        {
+            highestPrice = plants[i].AskingPrice;
+            highestPricedPlant = plants[i];
+        }
+    }
+    Console.WriteLine($"💲 Highest priced: {highestPricedPlant.Species}");
+
+    //Highest Light
+    Plant highestLightPlant = null;
+    int highestLight = int.MinValue;
+
+    for (int i = 0; i < plants.Count; i++)
+    {
+        if (plants[i].LightNeeds > highestLight)
+        {
+            highestLight = plants[i].LightNeeds;
+            highestLightPlant = plants[i];
+        }
+    }
+    Console.WriteLine($"💡 Highest light needs: {highestLightPlant.Species}");
+   
+
+    //Average Light
+    int totalLightNeeds = 0;
+
+    for(int i = 0; i < plants.Count; i++)
+    {
+        totalLightNeeds += plants[i].LightNeeds;
+    }
+    double averageLight = (double)totalLightNeeds / plants.Count;
+    Console.WriteLine($"💡 Average light needs: {averageLight:F1}");
+
+    //Percentage of plants adopted
+    int totalAdopted = 0;
+
+    for(int i = 0; i < plants.Count; i++)
+    {
+        if (plants[i].Sold)
+        {
+            totalAdopted ++;
+        }
+    }
+    double adoptedPercentage = (double)totalAdopted / plants.Count * 100;
+    Console.WriteLine($"🎉 Plants Adopted: {adoptedPercentage:F1}%");
+  
+    Console.WriteLine("\nPress any key to go back to Menu");
     Console.ReadKey();
     Console.Clear();
 }
