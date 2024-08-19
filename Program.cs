@@ -149,7 +149,7 @@ void ListPlants()
 ALL PLANTS");
     for (int i = 0; i < plants.Count; i++)
     {
-        Console.WriteLine($"{i + 1}. {plants[i].Species} in {plants[i].City} {(plants[i].Sold ? "was sold" : "is available")} for {plants[i].AskingPrice} dollars");
+        Console.WriteLine(PlantDetails(plants[i], i));
     }
   
     Console.WriteLine("\nPress any key to go back to Menu");
@@ -326,8 +326,8 @@ ADOPT A PLANT");
     for (int i = 0; i < availablePlants.Count; i++)
     {
         DateTime newDate = availablePlants[i].AvailableUntil;
-        Console.WriteLine(@$"{i + 1}. {availablePlants[i].Species} is available in {availablePlants[i].City} for {availablePlants[i].AskingPrice} dollars. 
-   Listing Expires: {newDate:MM/dd/yyyy}");
+        Console.WriteLine(PlantDetails(plants[i], i));
+        Console.WriteLine($"   Listing Expires: {newDate:MM/dd/yyyy}");
     }
 
     //Get user response
@@ -391,7 +391,7 @@ REMOVE PLANT");
 
     for (int i = 0; i < plants.Count; i++)
     {
-        Console.WriteLine($"{i + 1}. {plants[i].Species} in {plants[i].City} {(plants[i].Sold ? "was sold" : "is available")} for {plants[i].AskingPrice} dollars");
+        Console.WriteLine(PlantDetails(plants[i], i));
     }
 
     Console.WriteLine("Enter the number of the plant you want to remove (or 0 to cancel): ");
@@ -501,7 +501,7 @@ PLANT SEARCH");
         int index = 1;
         foreach (Plant plant in plantsFound)
         {
-            Console.WriteLine($"{index}. Light Needs: {plant.LightNeeds} - {plant.Species} in {plant.City} {(plant.Sold ? "was sold" : "is available")} for {plant.AskingPrice} dollars.");
+            Console.WriteLine($"{PlantDetails(plant, index-1)}. Light Needs: {plant.LightNeeds}");
             index++;
         }
     }
@@ -585,4 +585,12 @@ PLANT STATS");
     Console.WriteLine("\nPress any key to go back to Menu");
     Console.ReadKey();
     Console.Clear();
+}
+
+
+string PlantDetails(Plant plant, int index)
+{
+    string plantString = $"{index + 1}. {plant.Species} in {plant.City} {(plant.Sold ? "was sold" : "is available")} for {plant.AskingPrice:C}";
+
+    return plantString;
 }
