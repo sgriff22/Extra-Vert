@@ -119,9 +119,7 @@ Location: {randomPlant.City}, ZIP: {randomPlant.ZIP}
 Light Needs: {randomPlant.LightNeeds}
 Asking Price: {randomPlant.AskingPrice:C}");
          
-            Console.WriteLine("\nPress any key to go back to Menu");
-            Console.ReadKey(); 
-            Console.Clear();
+            ReturnMenu();
             break;
         case "f":
             Console.Clear();
@@ -152,9 +150,7 @@ ALL PLANTS");
         Console.WriteLine(PlantDetails(plants[i], i));
     }
   
-    Console.WriteLine("\nPress any key to go back to Menu");
-    Console.ReadKey(); 
-    Console.Clear();
+    ReturnMenu();
 }
 
 void CreatePlant()
@@ -294,9 +290,7 @@ POST A PLANT");
     ZIP: {zip}
     Sold: false
     Available Until: {date:MM/dd/yyyy}");
-    Console.WriteLine("\nPress any key to go back to Menu");
-    Console.ReadKey();
-    Console.Clear();
+    ReturnMenu();
 }
 
 void AdoptPlant()
@@ -317,9 +311,7 @@ ADOPT A PLANT");
     if (availablePlants.Count == 0)
     {
         Console.WriteLine("😞 No plants are currently available for adoption.");
-        Console.WriteLine("\nPress any key to go back to Menu");
-        Console.ReadKey();
-        Console.Clear();
+        ReturnMenu();
         validInput = true;
     }
 
@@ -346,9 +338,7 @@ ADOPT A PLANT");
                 validInput = true;
                 Console.Clear();
                 Console.WriteLine("❌ Adoption process cancelled.");
-                Console.WriteLine("\nPress any key to go back to Menu");
-                Console.ReadKey();
-                Console.Clear();
+                ReturnMenu();
             }
             else if (choice >= 1 && choice <= availablePlants.Count)
             {
@@ -378,9 +368,7 @@ You have successfully adopted:
     - Asking Price: {selectedPlant.AskingPrice:C}
 Thank you for adopting from ExtraVert!");
 
-        Console.WriteLine("\nPress any key to go back to Menu");
-        Console.ReadKey();
-        Console.Clear();
+        ReturnMenu();
     }
 }
 
@@ -409,9 +397,7 @@ REMOVE PLANT");
                 validInput = true;
                 Console.Clear();
                 Console.WriteLine("❌ Operation cancelled.");
-                Console.WriteLine("\nPress any key to return to the menu.");
-                Console.ReadKey();
-                Console.Clear();
+                ReturnMenu();
             }
             else if (choice >= 1 && choice <= plants.Count)
             {
@@ -428,11 +414,8 @@ REMOVE PLANT");
     - Species: {removedPlant.Species}
     - City: {removedPlant.City}
     - Asking Price: {removedPlant.AskingPrice:C}
-Thank you for updating our plant inventory!
-
-Press any key to return to the menu.");
-                Console.ReadKey();
-                Console.Clear();
+Thank you for updating our plant inventory!");
+                ReturnMenu();
             }
             else
             {
@@ -506,9 +489,7 @@ PLANT SEARCH");
         }
     }
 
-    Console.WriteLine("\nPress any key to go back to Menu");
-    Console.ReadKey();
-    Console.Clear();
+    ReturnMenu();
 }
 
 void PlantStats()
@@ -582,9 +563,7 @@ PLANT STATS");
     double adoptedPercentage = (double)totalAdopted / plants.Count * 100;
     Console.WriteLine($"🎉 Plants Adopted: {adoptedPercentage:F1}%");
   
-    Console.WriteLine("\nPress any key to go back to Menu");
-    Console.ReadKey();
-    Console.Clear();
+    ReturnMenu();
 }
 
 
@@ -593,4 +572,11 @@ string PlantDetails(Plant plant, int index)
     string plantString = $"{index + 1}. {plant.Species} in {plant.City} {(plant.Sold ? "was sold" : "is available")} for {plant.AskingPrice:C}";
 
     return plantString;
+}
+
+void ReturnMenu()
+{
+    Console.WriteLine("\nPress any key to go back to Menu");
+    Console.ReadKey();
+    Console.Clear();
 }
