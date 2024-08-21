@@ -461,17 +461,8 @@ PLANT SEARCH");
         }
     }
 
-    //Create a new list to store the plants based off response
-    List<Plant> plantsFound = new List<Plant>();
-
-    //Filter through and store only the plants that fit response value
-    foreach (Plant plant in plants)
-    {
-        if(plant.LightNeeds <= response) 
-        {
-            plantsFound.Add(plant);
-        }
-    }
+   
+    List<Plant> plantsFound = plants.Where(p => p.LightNeeds <= response).ToList();
 
     //Display the filtered plants 
     if (plantsFound.Count == 0) 
