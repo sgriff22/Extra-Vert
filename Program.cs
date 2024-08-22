@@ -78,7 +78,7 @@ Console.ReadKey();
 Console.Clear();
 
 string choice = null;
-while (choice != "h") 
+while (choice != "i") 
 {
     Console.WriteLine(@$"{logo}
 Choose an option:
@@ -89,7 +89,8 @@ Choose an option:
     e. Plant of the Day
     f. Search plants by light needs
     g. View plant stats
-    h. EXIT");
+    h. Plants by Species
+    i. EXIT");
 
     choice = Console.ReadLine();
 
@@ -130,6 +131,10 @@ Asking Price: {randomPlant.AskingPrice:C}");
             PlantStats();
             break;
         case "h":
+            Console.Clear();
+            InventoryBySpecies();
+            break;
+        case "i":
             Console.Clear();
             Console.WriteLine("👋 Goodbye!");
             break;
@@ -570,4 +575,28 @@ void ReturnMenu()
     Console.WriteLine("\nPress any key to go back to Menu");
     Console.ReadKey();
     Console.Clear();
+}
+
+void InventoryBySpecies()
+{
+    Dictionary<string, int> plantSpecies = new Dictionary<string, int>();
+
+    foreach (Plant plant in plants)
+    {
+        if (plantSpecies.ContainsKey(plant.Species))
+        {
+            plantSpecies[plant.Species]++;
+        }
+        else
+        {
+            plantSpecies.Add(plant.Species, 1);
+        }
+    }
+
+    foreach (KeyValuePair<string, int> kv in plantSpecies)
+    {
+        Console.WriteLine($"Species: {kv.Key}, Count: {kv.Value}");
+    }
+
+    ReturnMenu();
 }
