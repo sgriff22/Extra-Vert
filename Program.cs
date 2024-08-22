@@ -8,7 +8,8 @@
         City = "Nashville",
         ZIP = 37167,
         Sold = false,
-        AvailableUntil = new DateTime(2024, 9, 20)
+        AvailableUntil = new DateTime(2024, 9, 20),
+        PlantType = "herb"
     },
     new Plant()
     {
@@ -18,17 +19,19 @@
         City = "Austin",
         ZIP = 73301,
         Sold = false,
-        AvailableUntil = new DateTime(2024, 8, 20)
+        AvailableUntil = new DateTime(2024, 10, 20),
+        PlantType = "bush"
     },
     new Plant()
     {
-        Species = "Spider Plant",
+        Species = "Granny Smith Apple",
         LightNeeds = 2,
         AskingPrice = 20.50M,
         City = "Dallas",
         ZIP = 75201,
         Sold = false,
-        AvailableUntil = new DateTime(2024, 3, 20)
+        AvailableUntil = new DateTime(2024, 3, 20),
+        PlantType = "tree"
     },
     new Plant()
     {
@@ -38,7 +41,8 @@
         City = "Nashville",
         ZIP = 37167,
         Sold = false,
-        AvailableUntil = new DateTime(2024, 7, 20)
+        AvailableUntil = new DateTime(2024, 11, 20),
+        PlantType = "flower"
     },
     new Plant()
     {
@@ -48,7 +52,8 @@
         City = "San Antonio",
         ZIP = 78201,
         Sold = true,
-        AvailableUntil = new DateTime(2024, 9, 17)
+        AvailableUntil = new DateTime(2024, 9, 17),
+        PlantType = "bush"
     }
 };
 
@@ -118,7 +123,8 @@ Choose an option:
 Species: {randomPlant.Species}
 Location: {randomPlant.City}, ZIP: {randomPlant.ZIP}
 Light Needs: {randomPlant.LightNeeds}
-Asking Price: {randomPlant.AskingPrice:C}");
+Asking Price: {randomPlant.AskingPrice:C}
+PlantType: {randomPlant.PlantType}");
          
             ReturnMenu();
             break;
@@ -163,6 +169,43 @@ void CreatePlant()
     Console.Clear();
     Console.WriteLine(@$"{logo}
 POST A PLANT");
+
+    //PLANT TYPE
+    string[] plantTypes =
+    {
+        "tree",
+        "bush",
+        "flower", 
+        "herb"
+    };
+    Console.WriteLine("Choose the plant type:");
+    for (int i = 0; i < plantTypes.Length; i++)
+    {
+        Console.WriteLine($"{i + 1}. {plantTypes[i]}");
+    }
+    int typeChoice = 0;
+    bool validTypeInput = false;
+    while(!validTypeInput)
+    {
+        try 
+        {
+            typeChoice = int.Parse(Console.ReadLine().Trim());
+            if (typeChoice >= 1 && typeChoice <= plantTypes.Length)
+            {
+                validTypeInput = true;
+            }
+            else
+            {
+                Console.WriteLine($"❗Please enter a number between 1 and {plantTypes.Length}.");
+            }
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine("❗Please type only integers!");
+        }
+    }
+    string plantType = plantTypes[typeChoice - 1];
+
 
     //SPECIES
     Console.WriteLine("Enter the plant species: ");
@@ -281,7 +324,8 @@ POST A PLANT");
         City = city,
         ZIP = zip,
         Sold = false,
-        AvailableUntil = date
+        AvailableUntil = date,
+        PlantType = plantType
     };
 
     plants.Add(newPlant);
@@ -294,7 +338,8 @@ POST A PLANT");
     City: {city}
     ZIP: {zip}
     Sold: false
-    Available Until: {date:MM/dd/yyyy}");
+    Available Until: {date:MM/dd/yyyy}
+    Plant Type: {plantType}");
     ReturnMenu();
 }
 
@@ -480,7 +525,8 @@ PLANT SEARCH");
         int index = 1;
         foreach (Plant plant in plantsFound)
         {
-            Console.WriteLine($"{PlantDetails(plant, index-1)}. Light Needs: {plant.LightNeeds}");
+            Console.WriteLine(@$"{PlantDetails(plant, index-1)} 
+   Light Needs: {plant.LightNeeds}");
             index++;
         }
     }
@@ -565,7 +611,7 @@ PLANT STATS");
 
 string PlantDetails(Plant plant, int index)
 {
-    string plantString = $"{index + 1}. {plant.Species} in {plant.City} {(plant.Sold ? "was sold" : "is available")} for {plant.AskingPrice:C}";
+    string plantString = $"{index + 1}. {plant.Species} in {plant.City} {(plant.Sold ? "was sold" : "is available")} for {plant.AskingPrice:C}. Type: {plant.PlantType}";
 
     return plantString;
 }
