@@ -183,66 +183,17 @@ POST A PLANT");
     {
         Console.WriteLine($"{i + 1}. {plantTypes[i]}");
     }
-    int typeChoice = 0;
-    bool validTypeInput = false;
-    while(!validTypeInput)
-    {
-        try 
-        {
-            typeChoice = int.Parse(Console.ReadLine().Trim());
-            if (typeChoice >= 1 && typeChoice <= plantTypes.Length)
-            {
-                validTypeInput = true;
-            }
-            else
-            {
-                Console.WriteLine($"❗Please enter a number between 1 and {plantTypes.Length}.");
-            }
-        }
-        catch (FormatException)
-        {
-            Console.WriteLine("❗Please type only integers!");
-        }
-    }
+    int typeChoice = GetValidInteger(1, plantTypes.Length, "Please enter a number between 1 and 4." );
     string plantType = plantTypes[typeChoice - 1];
 
-
     //SPECIES
-    Console.WriteLine("Enter the plant species: ");
-    string species = Console.ReadLine().Trim();
+    string species = GetValidString("Enter the plant species: ");
     
     //LIGHT NEEDS
-    int light = 0;
-    bool validInput = false; 
     Console.WriteLine(@"How much light does the plant need?
 1 (Shade) - 5 (Full Sun)");
+    int light = GetValidInteger(1, 5, "Please enter a number between 1 and 5.");
     
-    while (!validInput)
-        {
-            try
-            {
-                light = int.Parse(Console.ReadLine().Trim());
-
-                if (light >= 1 && light <= 5)
-                {
-                    validInput = true;
-                }
-                else
-                {
-                    Console.WriteLine("❗Please enter a number between 1 and 5.");
-                }
-            }
-            catch (FormatException)
-            {
-                Console.WriteLine("❗Please type only integers!");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-                Console.WriteLine("❗Do Better!");
-            }
-        }
-
     //ASKING PRICE
     bool validPriceInput = false; 
     decimal price = 0.0M;
@@ -262,25 +213,11 @@ POST A PLANT");
     }
 
     //CITY
-    Console.WriteLine("Enter the city where the plant is sold: ");
-    string city = Console.ReadLine().Trim();
+    string city = GetValidString("Enter the city where the plant is sold: ");
 
     //ZIP
-    int zip = 0;
-    bool validZipInput = false;
-    while (!validZipInput)
-    {
-        Console.WriteLine("Enter zip code: ");
-        try
-        {
-            zip = int.Parse(Console.ReadLine().Trim());
-            validZipInput = true;
-        }
-        catch (FormatException)
-        {
-            Console.WriteLine("❗Please enter a valid integer for zip code.");
-        }
-    }
+    Console.WriteLine("Enter zip code: ");
+    int zip = GetValidInteger(10000, 99999, "ZIP code should be a 5-digit number.");
 
     //AVAILABLE UNTIL
     int year = 0;
@@ -355,14 +292,11 @@ ADOPT A PLANT");
     //Display all available plants
     List<Plant> availablePlants = plants.FindAll(p => !p.Sold && p.AvailableUntil >= now);
 
-    bool validInput = false;
-
     //if no available plants add a message
     if (availablePlants.Count == 0)
     {
         Console.WriteLine("😞 No plants are currently available for adoption.");
         ReturnMenu();
-        validInput = true;
     }
 
     for (int i = 0; i < availablePlants.Count; i++)
@@ -372,40 +306,15 @@ ADOPT A PLANT");
         Console.WriteLine($"   Listing Expires: {newDate:MM/dd/yyyy}");
     }
 
-    //Get user response
-    int choice = 0;
-        
     Console.WriteLine("Enter the number of the plant you want to adopt (or 0 to cancel): ");
+    int choice = GetValidInteger(0, availablePlants.Count, "❗Please enter a valid number corresponding to the plant.");
 
-    while (!validInput)
+    if (choice == 0)
     {
-        try 
-        {
-            choice = int.Parse(Console.ReadLine().Trim());
-
-            if (choice == 0)
-            {
-                validInput = true;
-                Console.Clear();
-                Console.WriteLine("❌ Adoption process cancelled.");
-                ReturnMenu();
-            }
-            else if (choice >= 1 && choice <= availablePlants.Count)
-            {
-                validInput = true;
-            }
-            else
-            {
-                Console.WriteLine("❗Please enter a valid number corresponding to the plant.");
-            }
-        }
-        catch (FormatException)
-        {
-            Console.WriteLine("❗Please type only integers!");
-        }
+        Console.Clear();
+        Console.WriteLine("❌ Adoption process cancelled.");
     }
-
-    if (choice != 0)
+    else 
     {
         Plant selectedPlant = availablePlants[choice -1];
         selectedPlant.Sold = true;
@@ -418,8 +327,8 @@ You have successfully adopted:
     - Asking Price: {selectedPlant.AskingPrice:C}
 Thank you for adopting from ExtraVert!");
 
-        ReturnMenu();
     }
+    ReturnMenu();
 }
 
 void RemovePlant()
@@ -433,51 +342,34 @@ REMOVE PLANT");
     }
 
     Console.WriteLine("Enter the number of the plant you want to remove (or 0 to cancel): ");
-    bool validInput = false;
+    
+    int choice = GetValidInteger(0, plants.Count, "❗Please enter a valid number corresponding to the plant.");
 
-    while(!validInput) 
+    if (choice == 0)
     {
-
-        try
-        {
-            int choice = int.Parse(Console.ReadLine().Trim());
-
-            if (choice == 0)
-            {
-                validInput = true;
-                Console.Clear();
-                Console.WriteLine("❌ Operation cancelled.");
-                ReturnMenu();
-            }
-            else if (choice >= 1 && choice <= plants.Count)
-            {
-                // Capture the plant information before removing it
-                Plant removedPlant = plants[choice - 1];
-
-                // Remove the plant from the list (adjusting for zero-based index)
-                plants.RemoveAt(choice - 1);
-                validInput = true;
-
-                Console.Clear();
-                Console.WriteLine(@$"🌟 Plant Successfully Removed! 🌟");
-                Console.WriteLine(@$"You have successfully removed the following plant:
-    - Species: {removedPlant.Species}
-    - City: {removedPlant.City}
-    - Asking Price: {removedPlant.AskingPrice:C}
-Thank you for updating our plant inventory!");
-                ReturnMenu();
-            }
-            else
-            {
-                Console.WriteLine("❗Please enter a valid number corresponding to the plant.");
-            }
-        }
-        catch (FormatException)
-        {
-            Console.WriteLine("❗Please enter a valid integer.");
-        }
+        Console.Clear();
+        Console.WriteLine("❌ Operation cancelled.");
     }
-} 
+    else 
+    {
+        // Capture the plant information before removing it
+        Plant removedPlant = plants[choice - 1];
+
+        // Remove the plant from the list (adjusting for zero-based index)
+        plants.RemoveAt(choice - 1);
+
+        Console.Clear();
+        Console.WriteLine(@$"🌟 Plant Successfully Removed! 🌟");
+        Console.WriteLine(@$"You have successfully removed the following plant:
+- Species: {removedPlant.Species}
+- City: {removedPlant.City}
+- Asking Price: {removedPlant.AskingPrice:C}
+Thank you for updating our plant inventory!");
+    }                 
+    ReturnMenu();
+}
+    
+
 
 void SearchPlants()
 {
@@ -486,31 +378,8 @@ void SearchPlants()
 PLANT SEARCH");
     Console.WriteLine(@"Enter your maximum light needs number
 1 (Shade) - 5 (Full Sun)");
-    int response = 0;
 
-    bool validInput = false;
-
-    while (!validInput)
-    {
-        try 
-        {
-            response = int.Parse(Console.ReadLine().Trim());
-
-            if (response >= 1 && response <= 5)
-            {
-                validInput = true;
-            }
-            else
-            {
-                Console.WriteLine("❗Please enter a number between 1 and 5.");
-            }
-        }
-        catch (FormatException)
-        {
-            Console.WriteLine("❗Please enter a valid integer.");
-        }
-    }
-
+    int response = GetValidInteger(1, 5, "❗Please enter a number between 1 and 5.");
    
     List<Plant> plantsFound = plants.Where(p => p.LightNeeds <= response).ToList();
 
@@ -645,4 +514,63 @@ void InventoryBySpecies()
     }
 
     ReturnMenu();
+}
+
+int GetValidInteger(int min, int max, string errorMessage)
+{
+    int value;
+    while(true)
+    {
+        try
+        {
+            value = int.Parse(Console.ReadLine().Trim());
+            if (value >= min && value <= max)
+            {
+                return value;
+            }
+             Console.WriteLine(errorMessage);
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine("❗Please type only integers!");
+        }
+    }
+}
+
+string GetValidString(string prompt)
+{
+    while(true)
+    {
+        Console.WriteLine(prompt);
+        string input = Console.ReadLine().Trim();
+
+        try
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                throw new ValidationException("Input cannot be empty.");
+            }
+            else if (input.Length > 50)
+            {
+                throw new ValidationException("Input is too long. It must be less than 50 characters.");
+            }
+            else
+            {
+                return input;
+            }
+        }
+        catch (ValidationException ex)
+        {
+            Console.WriteLine($"❗{ex.Message}");
+        }
+    }
+}
+
+
+public class ValidationException : Exception
+{
+    public ValidationException(string message) : base(message)
+    {
+
+    }
 }
